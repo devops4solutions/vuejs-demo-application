@@ -1,0 +1,21 @@
+version: '2'
+
+networks:
+  app-tier:
+    driver: bridge
+
+services:
+  nginx:
+    build:
+      context: .
+    networks:
+      - app-tier
+    ports:
+      - '8089:8080'
+      - '8443:8443'
+    volumes:
+      - ./.env:/app/.env
+      - ./vhosts/nginx.conf:/opt/bitnami/nginx/conf/server_blocks/nginx.conf
+volumes:
+  mariadb_data:
+    driver: local
