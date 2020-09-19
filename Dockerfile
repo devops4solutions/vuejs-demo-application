@@ -1,23 +1,32 @@
-ARG PHP_VERSION=latest
-FROM bitnami/php-fpm:$PHP_VERSION as app-build
-
-RUN [ "mkdir", "-p", "/build" ]
+ARG NODE_VERSION=latest
+ARG NGINX_VERSION=1.18.0
+FROM node:$NODE_VERSION as build
 
 WORKDIR /build
 
-COPY .env .
+COPY ./package*.json ./
+COPY ./vue.config.js .
+COPY ./babel.config.js .
+COPY ./.eslintrc.js .
+COPY ./.env .
 
-RUN [ "/opt/bitnami/php/bin/composer",  "install" ]
+RUN [ "npm", "install", "-g", "@vue/cli" ]
+RUN [ "npm", "install" ]
+RUN [ "npm", "run", "lint" ]
 
-FROM bitnami/php-fpm:$PHP_VERSION
+
+COPY ./src/ ./src/
+#COPY ./public/ ./public/
+
+RUN [ "npm", "run", "build" ]
+
+FROM bitnami/nginx:$NGINX_VERSION
 
 WORKDIR /app
+USER 1001
 
-COPY --from=app-build /build/public .
+COPY --from=build /build/dist .
 
-EXPOSE 9000
+EXPOSE 8080
 
-RUN [ "chown", "-R", "www-data:www-data", "/app" ]
-
-CMD [ "php-fpm", "-F", "--pid", "/opt/bitnami/php/tmp/php-fpm.pid", "-y", "/opt/bitnami/php/etc/php-fpm.conf" ]
 
