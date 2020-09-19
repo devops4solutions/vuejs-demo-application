@@ -19,6 +19,8 @@ docker-compose down --volumes
 
 ### Youtube Link
 
+Checkout the video link for this demo application
+
 https://youtu.be/dFmaM6wZmCo
 
 
