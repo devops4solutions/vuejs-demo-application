@@ -1,0 +1,4 @@
+[submodule ".configs"]
+	path = .configs
+	url = ../../devops/build-configs.git
+	branch = master
