@@ -8,7 +8,7 @@ COPY ./package*.json ./
 COPY ./vue.config.js .
 COPY ./babel.config.js .
 COPY ./.eslintrc.js .
-COPY ./.env .
+#COPY ./.env .
 
 RUN [ "npm", "install", "-g", "@vue/cli" ]
 RUN [ "npm", "install" ]
